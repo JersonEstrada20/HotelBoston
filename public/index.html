@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Hotel Boston, una estadía cálida y cómoda en el corazón de Quillota." />
+    <title>Hotel Boston | Quillota</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>.host-photo img{filter:none}</style>
+  </head>
+  <body>
+    <header class="site-header" id="inicio">
+      <a class="brand" href="#inicio" aria-label="Hotel Boston, inicio">
+        <img src="assets/logo.svg" alt="Hotel Boston" />
+      </a>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="#hotel">El hotel</a><a href="#habitaciones">Habitaciones</a><a href="#promocion">Promociones</a><a href="#salones">Eventos</a><a href="#ubicacion">Ubicación</a>
+      </nav>
+      <a class="button button-small" href="#reservas">Reservar estadía <span>↗</span></a>
+    </header>
+
+    <main>
+      <section class="hero" aria-label="Hotel Boston">
+        <div class="hero-slides" aria-hidden="true">
+          <div class="slide active" style="background-image:url('assets/hero-suite.jpg')"></div>
+          <div class="slide" style="background-image:url('assets/hero-lobby.jpg')"></div>
+          <div class="slide" style="background-image:url('assets/hero-room.jpg')"></div>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="eyebrow light">QUILLOTA · REGIÓN DE VALPARAÍSO</p>
+          <h1>Descansa como<br />en casa.</h1>
+          <p class="hero-copy">Un lugar cálido, tranquilo y pensado para que tu viaje se sienta especial.</p>
+          <a class="button button-light" href="#reservas">Consulta tu estadía <span>↗</span></a>
+        </div>
+        <div class="hero-bottom"><span>Desde 2000, recibiendo historias</span><div class="slide-dots"><button class="active" aria-label="Imagen 1"></button><button aria-label="Imagen 2"></button><button aria-label="Imagen 3"></button></div></div>
+      </section>
+
+      <section class="intro section" id="hotel">
+        <div class="intro-heading"><p class="eyebrow">BIENVENIDOS A HOTEL BOSTON</p><h2>Hospitalidad que<br /><em>se siente cercana.</em></h2></div>
+        <div class="intro-copy"><p>Creemos que una buena estadía se construye en los detalles: una bienvenida amable, espacios cómodos y la tranquilidad de saber que todo está resuelto.</p><p>Estamos a pasos del centro de Quillota y cerca de las principales rutas, para que llegues, descanses y disfrutes tu destino. También nos orientamos a ser un hotel consciente con el medio ambiente.</p><div class="certification"><img src="assets/sello-sernatur.png" alt="Certificación de calidad turística Sernatur" /><span>Hotel con certificación<br />de calidad turística</span></div><a class="text-link" href="#ubicacion">Conoce nuestra ubicación <span>→</span></a></div>
+      </section>
+
+      <section class="features" aria-label="Servicios del hotel"><div><strong>Atención</strong><span>personalizada</span></div><div><strong>Desayuno</strong><span>para comenzar bien el día</span></div><div><strong>Estacionamiento</strong><span>amplio y seguro</span></div><div><strong>WiFi</strong><span>para mantenerte conectado</span></div></section>
+
+      <section class="rooms section" id="habitaciones">
+        <div class="section-title"><div><p class="eyebrow">NUESTRAS HABITACIONES</p><h2>Tu pausa<br /><em>empieza aquí.</em></h2></div><p>Espacios acogedores y funcionales para descansar, trabajar o compartir con quien más quieres.</p></div>
+        <div class="room-grid">
+          <article class="room-card room-card-large"><img src="assets/room-suite.jpg" alt="Habitación Suite" /><div class="room-card-content"><p>01</p><h3>Suite</h3><span>Una pausa con todo lo necesario para una buena noche.</span><a href="#reservas" aria-label="Consultar Suite">↗</a></div></article>
+          <article class="room-card"><img src="assets/room-double.jpg" alt="Habitación Doble" /><div class="room-card-content"><p>02</p><h3>Doble</h3><span>Ideal para el descanso y la conversación.</span><a href="#reservas" aria-label="Consultar habitación Doble">↗</a></div></article>
+          <article class="room-card"><img src="assets/room-single.jpg" alt="Habitación Single" /><div class="room-card-content"><p>03</p><h3>Single</h3><span>Confort y tranquilidad para tu viaje.</span><a href="#reservas" aria-label="Consultar habitación Single">↗</a></div></article>
+        </div>
+      </section>
+
+      <section class="promotion" id="promocion">
+        <div class="promotion-image"><img src="assets/promo-romantica.jpg" alt="Promoción Noche Romántica en Hotel Boston" /></div>
+        <div class="promotion-copy"><p class="eyebrow">PROMOCIÓN ESPECIAL</p><h2>Noche<br /><em>Romántica.</em></h2><p>Una noche para celebrar a quien quieres. Ya sea una noche de bodas, aniversario u otra ocasión especial, preparamos el ambiente para que sea inolvidable.</p><p class="promotion-includes">Incluye espumante, bombones y desayuno para dos personas.</p><div class="promotion-action"><strong>Valor: $80.000</strong><a class="button" href="mailto:ventas@hotelboston.cl?subject=Reserva%20Noche%20Romántica%20-%20Hotel%20Boston">Solicitar reserva <span>↗</span></a></div></div>
+      </section>
+
+      <section class="events" id="salones"><div class="events-image"><img src="assets/events.jpg" alt="Salón para eventos del Hotel Boston" /></div><div class="events-copy"><p class="eyebrow light">SALONES DE EVENTOS</p><h2>Momentos que<br /><em>merecen un lugar.</em></h2><p>Reuniones, celebraciones y encuentros con un ambiente acogedor. Cuéntanos qué imaginas y coordinemos cada detalle.</p><a class="button button-light" href="#reservas">Cotizar un evento <span>↗</span></a></div></section>
+
+      <section class="host section" id="historia"><div class="host-photo"><img src="assets/mariana-silva.jpg" alt="Mariana Silva, fundadora de Hotel Boston" /></div><div class="host-story"><p class="eyebrow">NUESTRA HISTORIA</p><h2>Una idea nacida<br />en <em>Quillota.</em></h2><p>Las mejores ideas nacen cuando existe una necesidad. Para Mariana Silva, un hotel en Quillota era una verdadera necesidad; hoy, Hotel Boston sigue recibiendo a quienes buscan descanso y buena atención.</p><blockquote>“Con calor de hogar, a un precio razonable; un lugar que invite a los pasajeros a quedarse en esta ciudad amigable.”</blockquote><p class="host-signature">Mariana Silva</p></div></section>
+
+      <section class="quote section"><div class="quote-mark">“</div><blockquote>Es estar en casa, pero con la comodidad de un hotel.</blockquote><p>Una experiencia que nuestros pasajeros valoran</p></section>
+
+      <section class="reviews section" id="opiniones"><div class="reviews-heading"><p class="eyebrow">OPINIONES E IDEAS</p><h2>Nos encanta<br /><em>recibirte bien.</em></h2></div><div class="reviews-grid"><article><img src="assets/logo-booking.png" alt="Booking.com" /><p>“La atención fue muy buena; el desayuno, confortable y la limpieza excelente. Realmente lo recomendaría.”</p><strong>Claudio</strong></article><article><img src="assets/logo-google.png" alt="Google" /><p>“Excelente atención. Muy bueno y con buenos precios; desayuno americano.”</p><strong>Alejandrina Espinoza Verdugo</strong></article><article><img src="assets/logo-tripadvisor.png" alt="Tripadvisor" /><p>“Excelente atención, lindas habitaciones, desayuno rico y amplio estacionamiento seguro. Volveríamos.”</p><strong>Carlitos Serena</strong></article></div><p class="review-cta">¿Ya nos visitaste? <a href="https://www.tripadvisor.cl/UserReviewEdit-g652401-d2540627-Hotel_Boston-Quillota_Valparaiso_Region.html" target="_blank" rel="noreferrer">Déjanos tu opinión ↗</a></p></section>
+
+      <section class="contact" id="ubicacion"><div class="contact-map"><iframe title="Mapa de Hotel Boston en Quillota" src="https://www.google.com/maps?q=Hotel%20Boston%2C%2021%20de%20Mayo%20468%2C%20Quillota&output=embed" loading="lazy"></iframe></div><div class="contact-info" id="reservas"><p class="eyebrow">RESERVAS Y CONTACTO</p><h2>Te esperamos<br /><em>en Quillota.</em></h2><div class="contact-details"><p><strong>Dirección</strong><a href="https://maps.google.com/?q=Hotel+Boston,+21+de+Mayo+468,+Quillota" target="_blank" rel="noreferrer">21 de Mayo 468<br />Quillota, Chile</a></p><p><strong>Reservas</strong><a href="tel:+56332253197">+56 33 225 3197</a><a href="mailto:ventas@hotelboston.cl">ventas@hotelboston.cl</a></p></div><a class="button" href="mailto:ventas@hotelboston.cl?subject=Consulta%20de%20reserva%20-%20Hotel%20Boston">Solicitar disponibilidad <span>↗</span></a></div></section>
+    </main>
+    <footer><a class="brand brand-footer" href="#inicio"><img src="assets/logo-white.svg" alt="Hotel Boston" /></a><p>Una estadía acogedora en el corazón de Quillota.</p><div><a href="#hotel">El hotel</a><a href="#habitaciones">Habitaciones</a><a href="#promocion">Promociones</a><a href="#salones">Eventos</a><a href="#ubicacion">Contacto</a></div><div class="footer-seals"><img src="assets/sello-q.png" alt="Sello Q de Calidad Turística" /><img src="assets/sello-esnna.png" alt="Certificación ESNNA" /></div><small>© <span id="year"></span> Hotel Boston · Quillota, Chile</small></footer>
+    <script src="script.js"></script>
+  </body>
+</html>
