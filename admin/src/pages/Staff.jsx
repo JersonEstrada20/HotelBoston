@@ -66,7 +66,7 @@ export default function Staff() {
       setForm({ email: "", role: "recepcion", accountType: "existing", password: "", confirmation: "" });
       await load();
     } catch (inviteError) {
-      setError(functionErrorMessage(inviteError));
+      setError(await functionErrorMessage(inviteError));
     } finally {
       setBusy("");
     }
@@ -92,7 +92,7 @@ export default function Staff() {
       setRoleEdits((current) => ({ ...current, [person.id]: undefined }));
       await load();
     } catch (actionError) {
-      setError(functionErrorMessage(actionError));
+      setError(await functionErrorMessage(actionError));
     } finally {
       setBusy("");
     }

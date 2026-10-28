@@ -60,7 +60,7 @@ export default function Account() {
       setConfirmation("");
       await refreshProfile();
     } catch (changeError) {
-      setError(functionErrorMessage(changeError));
+      setError(await functionErrorMessage(changeError));
     } finally {
       setSavingPassword(false);
     }

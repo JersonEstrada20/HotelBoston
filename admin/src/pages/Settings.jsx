@@ -113,7 +113,7 @@ export default function Settings() {
       setMessage("Publicación iniciada. Cloudflare reconstruirá el sitio en 1-2 minutos.");
       await load();
     } catch (publishError) {
-      setError(functionErrorMessage(publishError));
+      setError(await functionErrorMessage(publishError));
     } finally {
       setPublishing(false);
     }

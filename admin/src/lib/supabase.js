@@ -51,10 +51,23 @@ export async function uploadReviewPhoto(file) {
   return supabase.storage.from("guest-review-photos").getPublicUrl(path).data.publicUrl;
 }
 
-export function functionErrorMessage(error) {
+export async function functionErrorMessage(error) {
   if (!error) return "No se pudo completar la operación.";
   if (error.message?.includes("Failed to fetch")) {
     return "No se pudo conectar con Supabase. Revisa la conexión e inténtalo nuevamente.";
+  }
+  const response = error.context;
+  if (response && typeof response.clone === "function") {
+    try {
+      const body = await response.clone().json();
+      if (body?.error) return String(body.error);
+      if (body?.message) return String(body.message);
+    } catch {
+      // La función no devolvió JSON; se usa el mensaje genérico.
+    }
+    if (response.status) {
+      return `El servidor rechazó la solicitud (${response.status}). Intenta nuevamente.`;
+    }
   }
   return error.message || "No se pudo completar la operación.";
 }

@@ -89,7 +89,7 @@ export default function Integrations() {
       setMessage(`${calendar.cabin?.name || "Espacio"}: ${data.imported} bloqueo(s) importado(s).`);
       await load();
     } catch (syncError) {
-      setError(functionErrorMessage(syncError));
+      setError(await functionErrorMessage(syncError));
     } finally {
       setBusy("");
     }

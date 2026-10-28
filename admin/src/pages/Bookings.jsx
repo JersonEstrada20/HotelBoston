@@ -69,7 +69,7 @@ export default function Bookings() {
       else if (data?.email_sent === false) setMessage(`Estado actualizado a ${status}, pero Brevo no pudo enviar el correo. Revisa la configuración.`);
       else setMessage(`Solicitud ${status}. Correo enviado${data?.whatsappQueued ? " y WhatsApp en cola" : ""}.`);
     } catch (updateError) {
-      setError(functionErrorMessage(updateError));
+      setError(await functionErrorMessage(updateError));
     } finally {
       setBusyId("");
     }
@@ -88,7 +88,7 @@ export default function Bookings() {
       setMessage(data?.duplicate ? "El equipo ya fue avisado de esta solicitud." : "Aviso enviado al equipo por Brevo.");
       await load();
     } catch (notifyError) {
-      setError(functionErrorMessage(notifyError));
+      setError(await functionErrorMessage(notifyError));
     } finally {
       setBusyId("");
     }
