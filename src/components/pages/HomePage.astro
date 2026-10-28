@@ -5,11 +5,14 @@ import Icon from "../Icon.astro";
 import SectionHeading from "../SectionHeading.astro";
 import RoomCard from "../RoomCard.astro";
 import ReviewCard from "../ReviewCard.astro";
+import GuestReviewCard from "../GuestReviewCard.astro";
+import ReviewForm from "../ReviewForm.astro";
 import SealRow from "../SealRow.astro";
 import CtaBand from "../CtaBand.astro";
 import { ui, formatClp, route } from "../../i18n/ui";
 import type { Lang } from "../../data/site";
-import { site, images, roomTypes, reviews } from "../../data/site";
+import { images, reviews as staticReviews } from "../../data/site";
+import { getSiteContent } from "../../lib/content";
 import eventsImage from "../../assets/events.jpg";
 
 interface Props {
@@ -19,6 +22,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = ui[lang];
 const meta = t.meta.home;
+const { site, rooms: roomTypes, guestReviews, promo } = await getSiteContent();
 
 const heroTitle =
   lang === "es" ? "Descansa como en <em>casa</em>." : "Rest like you are at <em>home</em>.";
@@ -198,34 +202,47 @@ const schema = [
     </div>
   </section>
 
-  <section class="promotion">
-    <div class="promotion-media">
-      <Image
-        src={images.promoRomantica}
-        alt={lang === "es" ? "Promoción Noche Romántica de Hotel Boston" : "Hotel Boston Romantic Night promotion"}
-        widths={[600, 1000, 1400]}
-        sizes="(max-width: 900px) 100vw, 50vw"
-        loading="lazy"
-      />
-    </div>
-    <div class="promotion-copy">
-      <p class="eyebrow">{t.home.promoEyebrow}</p>
-      <h2 set:html={promoTitle} />
-      <p>{t.home.promoCopy}</p>
-      <p class="promotion-includes">{t.home.promoIncludes}</p>
-      <div class="promotion-action">
-        <div>
-          <strong>{formatClp(80000, lang)}</strong>
-          <small>{t.common.inclVat}</small>
-        </div>
-        <a class="button" href={`${route(lang, "bookings")}?habitacion=suite#solicitud`}>
-          {t.home.promoRequest}
-          <Icon name="arrow" size={18} />
-        </a>
+  {promo.enabled && (
+    <section class="promotion">
+      <div class="promotion-media">
+        {promo.imageUrl ? (
+          <img
+            src={promo.imageUrl}
+            alt={promo.title || "Hotel Boston"}
+            loading="lazy"
+          />
+        ) : (
+          <Image
+            src={images.promoRomantica}
+            alt={lang === "es" ? "Promoción Noche Romántica de Hotel Boston" : "Hotel Boston Romantic Night promotion"}
+            widths={[600, 1000, 1400]}
+            sizes="(max-width: 900px) 100vw, 50vw"
+            loading="lazy"
+          />
+        )}
       </div>
-      <p class="price-note">{t.home.promoNote}</p>
-    </div>
-  </section>
+      <div class="promotion-copy">
+        <p class="eyebrow">{t.home.promoEyebrow}</p>
+        {promo.title ? <h2>{promo.title}</h2> : <h2 set:html={promoTitle} />}
+        <p>{promo.message || t.home.promoCopy}</p>
+        <p class="promotion-includes">{t.home.promoIncludes}</p>
+        <div class="promotion-action">
+          <div>
+            <strong>{formatClp(80000, lang)}</strong>
+            <small>{t.common.inclVat}</small>
+          </div>
+          <a
+            class="button"
+            href={promo.buttonUrl || `${route(lang, "bookings")}?habitacion=suite#solicitud`}
+          >
+            {promo.buttonLabel || t.home.promoRequest}
+            <Icon name="arrow" size={18} />
+          </a>
+        </div>
+        <p class="price-note">{t.home.promoNote}</p>
+      </div>
+    </section>
+  )}
 
   <section class="events">
     <div class="events-media">
@@ -283,23 +300,27 @@ const schema = [
         copy={t.home.reviewsNote}
       />
       <div class="reviews-grid">
-        {reviews.map((review) => (
-          <ReviewCard
-            lang={lang}
-            name={review.name}
-            source={review.source}
-            logo={review.logo}
-            text={review.text}
-          />
-        ))}
+        {guestReviews.length
+          ? guestReviews.map((review) => <GuestReviewCard lang={lang} review={review} />)
+          : staticReviews.map((review) => (
+              <ReviewCard
+                lang={lang}
+                name={review.name}
+                source={review.source}
+                logo={review.logo}
+                text={review.text}
+              />
+            ))}
       </div>
       <p class="reviews-cta">
-        <a href={site.social.tripadvisor} target="_blank" rel="noopener noreferrer">
+        <a href="#opinion">
           {t.home.reviewsCta}
         </a>
       </p>
     </div>
   </section>
+
+  <ReviewForm lang={lang} />
 
   <section class="contact">
     <div class="contact-map">

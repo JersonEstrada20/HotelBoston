@@ -3,7 +3,8 @@ import logoWhite from "../assets/logo-white.svg";
 import Icon from "./Icon.astro";
 import { ui, route, type RouteKey } from "../i18n/ui";
 import type { Lang } from "../data/site";
-import { site, images } from "../data/site";
+import { images } from "../data/site";
+import { getSiteContent } from "../lib/content";
 
 interface Props {
   lang: Lang;
@@ -12,6 +13,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = ui[lang];
 const year = new Date().getFullYear();
+const { site } = await getSiteContent();
 
 const explore: { key: RouteKey; label: string }[] = [
   { key: "home", label: t.nav.home },

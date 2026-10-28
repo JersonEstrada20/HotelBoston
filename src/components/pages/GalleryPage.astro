@@ -5,7 +5,8 @@ import GalleryGrid from "../GalleryGrid.astro";
 import CtaBand from "../CtaBand.astro";
 import { ui } from "../../i18n/ui";
 import type { Lang } from "../../data/site";
-import { site, images, gallery } from "../../data/site";
+import { images, gallery } from "../../data/site";
+import { getSiteContent } from "../../lib/content";
 
 interface Props {
   lang: Lang;
@@ -14,6 +15,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = ui[lang];
 const meta = t.meta.gallery;
+const { site } = await getSiteContent();
 
 const title = lang === "es" ? "Conoce el <em>hotel</em>." : "Get to know the <em>hotel</em>.";
 ---

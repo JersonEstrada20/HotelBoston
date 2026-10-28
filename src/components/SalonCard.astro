@@ -1,12 +1,13 @@
 ---
-import { Image } from "astro:assets";
 import Icon from "./Icon.astro";
+import DynamicImage from "./DynamicImage.astro";
 import { ui, route } from "../i18n/ui";
-import type { Lang, Salon } from "../data/site";
+import type { Lang } from "../data/site";
+import type { PublicSalon } from "../lib/content";
 
 interface Props {
   lang: Lang;
-  salon: Salon;
+  salon: PublicSalon;
 }
 
 const { lang, salon } = Astro.props;
@@ -16,7 +17,7 @@ const bookingHref = `${route(lang, "bookings")}?salon=${salon.slug}#solicitud`;
 
 <article class="salon-card">
   <a class="salon-media" href={bookingHref} aria-label={`${t.salons.cta}: ${salon.name}`}>
-    <Image
+    <DynamicImage
       src={salon.image}
       alt={`Salón ${salon.name} — Hotel Boston`}
       widths={[420, 720, 1200]}

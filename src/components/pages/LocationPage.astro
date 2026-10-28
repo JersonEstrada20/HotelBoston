@@ -5,7 +5,8 @@ import Icon from "../Icon.astro";
 import CtaBand from "../CtaBand.astro";
 import { ui } from "../../i18n/ui";
 import type { Lang } from "../../data/site";
-import { site, images } from "../../data/site";
+import { images } from "../../data/site";
+import { getSiteContent } from "../../lib/content";
 
 interface Props {
   lang: Lang;
@@ -14,6 +15,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = ui[lang];
 const meta = t.meta.location;
+const { site } = await getSiteContent();
 
 const title = lang === "es" ? "A pasos del <em>centro</em>." : "Steps from <em>downtown</em>.";
 ---

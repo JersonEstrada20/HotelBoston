@@ -1,13 +1,14 @@
 ---
-import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../PageHero.astro";
 import Icon from "../Icon.astro";
+import DynamicImage from "../DynamicImage.astro";
 import CtaBand from "../CtaBand.astro";
 import SectionHeading from "../SectionHeading.astro";
 import { ui, formatClp, route } from "../../i18n/ui";
 import type { AmenityKey, Lang } from "../../data/site";
-import { roomTypes, site } from "../../data/site";
+import { images } from "../../data/site";
+import { getSiteContent } from "../../lib/content";
 
 interface Props {
   lang: Lang;
@@ -16,6 +17,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = ui[lang];
 const meta = t.meta.rooms;
+const { site, rooms: roomTypes } = await getSiteContent();
 
 const title = lang === "es" ? "Descanso a tu <em>medida</em>." : "Rest on your <em>terms</em>.";
 
@@ -45,7 +47,7 @@ const roomAmenities: AmenityKey[] = [
   "commonAreas",
 ];
 
-const heroImage = roomTypes[2].image;
+const heroImage = images.heroSuite;
 ---
 
 <BaseLayout
@@ -89,7 +91,7 @@ const heroImage = roomTypes[2].image;
                     ? "room-detail-wide"
                     : undefined;
               return (
-                <Image
+                <DynamicImage
                   src={image}
                   alt={`${name} — Hotel Boston`}
                   widths={[480, 720, 1100]}

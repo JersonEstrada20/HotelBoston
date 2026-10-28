@@ -5,18 +5,29 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "dev:admin": "vite --config admin/vite.config.js",
+    "build": "npm run build:site && npm run build:admin",
+    "build:site": "astro build",
+    "build:admin": "vite build --config admin/vite.config.js && node scripts/copy-admin-routes.mjs",
     "preview": "astro preview",
+    "preview:admin": "vite preview --config admin/vite.config.js",
     "check": "astro check",
     "deploy": "npm run build && wrangler pages deploy dist --project-name hotelboston"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
+    "@vitejs/plugin-react": "^6.0.5",
     "typescript": "^5.8.2",
+    "vite": "^8.3.5",
     "wrangler": "^4.52.0"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
-    "astro": "^7.4.3"
+    "@supabase/supabase-js": "^2.49.1",
+    "astro": "^7.4.3",
+    "lucide-react": "^0.475.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.0"
   }
 }

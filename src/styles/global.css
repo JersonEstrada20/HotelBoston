@@ -1056,6 +1056,45 @@ main {
   background: var(--white);
 }
 
+.review-stars {
+  margin: 0 0 18px;
+  color: var(--terracotta);
+  font-size: 15px;
+  letter-spacing: 0.12em;
+}
+
+.review-stars span {
+  color: var(--ink-muted);
+}
+
+.review-photo {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  margin: 0 0 20px;
+  object-fit: cover;
+}
+
+.review-reply {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-left: 2px solid var(--terracotta);
+  background: var(--paper-deep);
+}
+
+.review-reply strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.review-reply p {
+  color: var(--ink-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .review-logo {
   width: 88px;
   height: auto;
@@ -1112,6 +1151,57 @@ main {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-decoration: none;
+  text-transform: uppercase;
+}
+
+.review-form-section {
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+}
+
+.review-form-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+
+.review-form .field input[type="file"] {
+  padding: 9px 11px;
+  background: var(--paper);
+}
+
+.review-form .field-hint {
+  color: var(--ink-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.review-photo-preview {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 18px;
+}
+
+.review-photo-preview img {
+  width: auto;
+  max-width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+}
+
+.review-photo-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 10px;
+  border: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -1868,6 +1958,28 @@ main {
   outline-offset: 0;
 }
 
+.availability-check {
+  margin-top: 18px;
+}
+
+.availability-status {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.availability-status.is-success {
+  color: #3d6b4f;
+}
+
+.availability-status.is-error {
+  color: #a33f2f;
+}
+
+.availability-status.is-neutral {
+  color: var(--ink-soft);
+}
+
 .checkbox-field {
   display: flex;
   align-items: flex-start;
@@ -2201,6 +2313,10 @@ main {
 @media (max-width: 900px) {
   body {
     padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+
+  .review-form-inner {
+    grid-template-columns: 1fr;
   }
 
   .desktop-nav,

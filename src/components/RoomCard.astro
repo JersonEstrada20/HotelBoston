@@ -1,12 +1,13 @@
 ---
-import { Image } from "astro:assets";
 import Icon from "./Icon.astro";
+import DynamicImage from "./DynamicImage.astro";
 import { ui, formatClp, route } from "../i18n/ui";
-import type { Lang, RoomType } from "../data/site";
+import type { Lang } from "../data/site";
+import type { PublicRoom } from "../lib/content";
 
 interface Props {
   lang: Lang;
-  room: RoomType;
+  room: PublicRoom;
   index: number;
 }
 
@@ -18,7 +19,7 @@ const roomName = room.name[lang];
 
 <article class="room-card">
   <a class="room-media" href={bookingHref} aria-label={`${t.rooms.cta}: ${roomName}`}>
-    <Image
+    <DynamicImage
       src={room.image}
       alt={`${roomName} — Hotel Boston`}
       widths={[420, 720, 1000]}

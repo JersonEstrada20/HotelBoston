@@ -3,7 +3,7 @@ import logo from "../assets/logo.svg";
 import Icon from "./Icon.astro";
 import { ui, route, otherLang, type RouteKey } from "../i18n/ui";
 import type { Lang } from "../data/site";
-import { site } from "../data/site";
+import { getSiteContent } from "../lib/content";
 
 interface Props {
   lang: Lang;
@@ -13,6 +13,7 @@ interface Props {
 const { lang, routeKey } = Astro.props;
 const t = ui[lang];
 const other = otherLang(lang);
+const { site } = await getSiteContent();
 
 const navItems: { key: RouteKey; label: string }[] = [
   { key: "home", label: t.nav.home },

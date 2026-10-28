@@ -206,6 +206,21 @@ export const ui = {
       reviewsNote:
         "Opiniones publicadas por huéspedes en plataformas de viaje. Se mantienen en su idioma original.",
       reviewsCta: "¿Ya nos visitaste? Déjanos tu opinión",
+      reviewFormEyebrow: "Tu experiencia",
+      reviewFormTitle: "Cuéntanos cómo fue tu estadía.",
+      reviewFormCopy:
+        "Tu opinión nos ayuda a seguir mejorando. La revisaremos antes de publicarla en el sitio.",
+      reviewName: "Tu nombre",
+      reviewRating: "Calificación",
+      reviewMessage: "Tu opinión",
+      reviewPhoto: "Foto (opcional)",
+      reviewPhotoHint: "JPG, PNG o WebP de hasta 5 MB. Se publica solo cuando aprobamos la opinión.",
+      reviewRemovePhoto: "Quitar foto",
+      reviewPhotoError: "Elige una imagen JPG, PNG o WebP de hasta 5 MB.",
+      reviewSubmit: "Enviar opinión",
+      reviewSending: "Enviando…",
+      reviewSuccess: "¡Gracias! Recibimos tu opinión y la revisaremos antes de publicarla.",
+      reviewError: "No pudimos enviar tu opinión. Inténtalo nuevamente.",
       contactEyebrow: "Reservas y contacto",
       contactTitle: "Te esperamos en Quillota.",
       contactCopy:
@@ -293,16 +308,34 @@ export const ui = {
       validationDates: "La fecha de salida debe ser posterior a la fecha de llegada.",
       openingEmail: "Se abrirá tu aplicación de correo con la solicitud preparada.",
       openingWhatsapp: "Se abrirá WhatsApp con la solicitud preparada.",
+      sending: "Enviando solicitud…",
+      submitSuccess:
+        "Recibimos tu solicitud. El equipo revisará la disponibilidad y te contactará para confirmarla.",
+      submitReference: "N.º de seguimiento",
+      submitError: "No pudimos enviar la solicitud. Revisa tu conexión e inténtalo nuevamente.",
+      missingPhone: "Indica un teléfono válido para que podamos contactarte.",
       emailSubject: "Solicitud de reserva — Hotel Boston",
       requestIntro: "Solicitud de reserva — Hotel Boston",
       guests: "Cantidad de huéspedes",
+      checkAvailability: "Consultar disponibilidad de fechas",
+      checkingAvailability: "Consultando…",
+      availableMessage:
+        "La opción aparece disponible para esas fechas. Es solo una orientación; recepción debe confirmar la disponibilidad y la reserva.",
+      capacityMessage:
+        "La capacidad de esta opción es de {capacity} personas. Consulta con recepción por otra alternativa.",
+      occupiedMessage:
+        "La opción aparece ocupada durante parte o todas esas fechas. Consulta con recepción para revisar alternativas.",
+      unavailableMessage:
+        "La opción no está disponible para solicitar ahora. Elige otra opción o contacta a recepción.",
+      availabilityError:
+        "No pudimos consultar estas fechas ahora. De todas formas, puedes enviar la solicitud para que recepción la revise.",
       message: "Mensaje o requerimientos especiales",
       consent:
         "Autorizo el tratamiento de mis datos para gestionar esta solicitud, según la política de privacidad.",
-      submitEmail: "Enviar por correo",
+      submitEmail: "Enviar solicitud",
       submitWhatsapp: "Enviar por WhatsApp",
       formNote:
-        "Al enviar, se abrirá tu aplicación de correo o WhatsApp con el mensaje preparado. No se guarda información en este sitio todavía.",
+        "Tu solicitud queda registrada para que recepción revise la disponibilidad. La reserva se confirma después del contacto del equipo.",
       eventTitle: "¿Buscas un salón para un evento?",
       eventCopy:
         "Cuéntanos el tipo de evento, la fecha aproximada y la cantidad de personas. Te enviaremos una cotización.",
@@ -695,6 +728,21 @@ export const ui = {
       reviewsNote:
         "Reviews published by guests on travel platforms. They are shown in their original language.",
       reviewsCta: "Have you stayed with us? Leave a review",
+      reviewFormEyebrow: "Your experience",
+      reviewFormTitle: "Tell us how your stay was.",
+      reviewFormCopy:
+        "Your review helps us keep improving. We will check it before publishing it on the site.",
+      reviewName: "Your name",
+      reviewRating: "Rating",
+      reviewMessage: "Your review",
+      reviewPhoto: "Photo (optional)",
+      reviewPhotoHint: "JPG, PNG or WebP up to 5 MB. It is published only after we approve the review.",
+      reviewRemovePhoto: "Remove photo",
+      reviewPhotoError: "Choose a JPG, PNG or WebP image up to 5 MB.",
+      reviewSubmit: "Send review",
+      reviewSending: "Sending…",
+      reviewSuccess: "Thank you! We received your review and will check it before publishing.",
+      reviewError: "We could not send your review. Please try again.",
       contactEyebrow: "Bookings and contact",
       contactTitle: "We are waiting for you in Quillota.",
       contactCopy:
@@ -782,16 +830,34 @@ export const ui = {
       validationDates: "The departure date must be after the arrival date.",
       openingEmail: "Your email app will open with the request prepared.",
       openingWhatsapp: "WhatsApp will open with the request prepared.",
+      sending: "Sending request…",
+      submitSuccess:
+        "We received your request. Our team will check availability and contact you to confirm it.",
+      submitReference: "Tracking no.",
+      submitError: "We could not send your request. Check your connection and try again.",
+      missingPhone: "Enter a valid phone number so we can contact you.",
       emailSubject: "Booking request — Hotel Boston",
       requestIntro: "Booking request — Hotel Boston",
       guests: "Number of guests",
+      checkAvailability: "Check date availability",
+      checkingAvailability: "Checking…",
+      availableMessage:
+        "This option appears available for those dates. This is only a guide; reception must confirm availability and the booking.",
+      capacityMessage:
+        "This option's capacity is {capacity} guests. Contact reception to ask about another alternative.",
+      occupiedMessage:
+        "This option appears occupied for part or all of those dates. Contact reception to review alternatives.",
+      unavailableMessage:
+        "This option is not currently available to request. Choose another option or contact reception.",
+      availabilityError:
+        "We could not check these dates right now. You can still submit your request for reception to review.",
       message: "Message or special requests",
       consent:
         "I consent to the processing of my data to manage this request, according to the privacy policy.",
-      submitEmail: "Send by email",
+      submitEmail: "Send request",
       submitWhatsapp: "Send by WhatsApp",
       formNote:
-        "When you submit, your email app or WhatsApp will open with a prepared message. No information is stored on this site yet.",
+        "Your request is recorded so reception can check availability. The booking is confirmed after our team contacts you.",
       eventTitle: "Looking for an event room?",
       eventCopy:
         "Tell us the type of event, the approximate date and the number of guests. We will send you a quote.",

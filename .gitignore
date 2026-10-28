@@ -1,6 +1,7 @@
 node_modules/
 .wrangler/
 .astro/
+migration/supabase/.temp/
 dist/
 legacy/
 opencode.json

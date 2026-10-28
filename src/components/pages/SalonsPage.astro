@@ -6,7 +6,8 @@ import Icon from "../Icon.astro";
 import CtaBand from "../CtaBand.astro";
 import { ui, route } from "../../i18n/ui";
 import type { AmenityKey, Lang } from "../../data/site";
-import { salons } from "../../data/site";
+import { images } from "../../data/site";
+import { getSiteContent } from "../../lib/content";
 
 interface Props {
   lang: Lang;
@@ -15,9 +16,10 @@ interface Props {
 const { lang } = Astro.props;
 const t = ui[lang];
 const meta = t.meta.salons;
+const { salons } = await getSiteContent();
 
 const title = lang === "es" ? "Un lugar para cada <em>ocasión</em>." : "A place for every <em>occasion</em>.";
-const heroImage = salons[1].image;
+const heroImage = images.gallerySpaces2;
 
 const amenityIcons = {
   attention: "sparkle",

@@ -1,0 +1,105 @@
+---
+import Icon from "./Icon.astro";
+import SectionHeading from "./SectionHeading.astro";
+import { ui } from "../i18n/ui";
+import type { Lang } from "../data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<section class="review-form-section" id="opinion">
+  <div class="section review-form-inner">
+    <SectionHeading
+      eyebrow={t.home.reviewFormEyebrow}
+      title={t.home.reviewFormTitle}
+      copy={t.home.reviewFormCopy}
+    />
+
+    <form
+      class="booking-form-wrap review-form"
+      data-review-form
+      data-lang={lang}
+      data-msg-sending={t.home.reviewSending}
+      data-msg-success={t.home.reviewSuccess}
+      data-msg-error={t.home.reviewError}
+      data-msg-photo-error={t.home.reviewPhotoError}
+      novalidate
+    >
+      <div class="form-grid">
+        <label class="field" for="review-name">
+          <span>{t.home.reviewName}</span>
+          <input
+            type="text"
+            name="guest_name"
+            id="review-name"
+            autocomplete="name"
+            minlength="2"
+            maxlength="100"
+            required
+          />
+        </label>
+
+        <label class="field" for="review-rating">
+          <span>{t.home.reviewRating}</span>
+          <select name="rating" id="review-rating" required>
+            <option value="5">5 — ★★★★★</option>
+            <option value="4">4 — ★★★★☆</option>
+            <option value="3">3 — ★★★☆☆</option>
+            <option value="2">2 — ★★☆☆☆</option>
+            <option value="1">1 — ★☆☆☆☆</option>
+          </select>
+        </label>
+
+        <label class="field field-full" for="review-message">
+          <span>{t.home.reviewMessage}</span>
+          <textarea
+            name="message"
+            id="review-message"
+            rows="4"
+            minlength="10"
+            maxlength="2000"
+            required
+          ></textarea>
+        </label>
+
+        <label class="field field-full" for="review-photo">
+          <span>{t.home.reviewPhoto}</span>
+          <input
+            type="file"
+            name="photo"
+            id="review-photo"
+            accept="image/jpeg,image/png,image/webp"
+          />
+          <small class="field-hint">{t.home.reviewPhotoHint}</small>
+        </label>
+      </div>
+
+      <div class="review-photo-preview" data-photo-preview hidden>
+        <img alt="" data-photo-preview-image />
+        <button class="review-photo-remove" type="button" data-photo-remove>
+          {t.home.reviewRemovePhoto}
+        </button>
+      </div>
+
+      <div class="form-status" data-review-status role="status" aria-live="polite"></div>
+
+      <div class="form-actions">
+        <button class="button" type="submit" data-review-submit>
+          <Icon name="mail" size={18} />
+          <span data-review-submit-label>{t.home.reviewSubmit}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { initReviewForm } from "../scripts/review-form";
+
+  initReviewForm();
+</script>

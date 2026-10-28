@@ -1,0 +1,44 @@
+---
+import type { Lang } from "../data/site";
+import type { PublicReview } from "../lib/content";
+
+interface Props {
+  lang: Lang;
+  review: PublicReview;
+}
+
+const { lang, review } = Astro.props;
+---
+
+<article class="review-card">
+  <p class="review-stars" aria-label={`${review.rating} / 5`}>
+    {"★".repeat(review.rating)}
+    <span aria-hidden="true">{"☆".repeat(5 - review.rating)}</span>
+  </p>
+  {review.photoUrl && (
+    <img
+      class="review-photo"
+      src={review.photoUrl}
+      alt={lang === "es" ? `Foto compartida por ${review.name}` : `Photo shared by ${review.name}`}
+      loading="lazy"
+    />
+  )}
+  <blockquote lang={review.language}>
+    <p>{review.text}</p>
+  </blockquote>
+  {review.adminReply && (
+    <div class="review-reply">
+      <strong>{lang === "es" ? "Respuesta del hotel" : "Hotel reply"}</strong>
+      <p>{review.adminReply}</p>
+    </div>
+  )}
+  <footer>
+    <strong>{review.name}</strong>
+    <span>{lang === "es" ? "Huésped verificado" : "Verified guest"}</span>
+  </footer>
+  {lang !== review.language && (
+    <p class="review-note">
+      {lang === "es" ? "Reseña original en inglés." : "Original review in Spanish."}
+    </p>
+  )}
+</article>
