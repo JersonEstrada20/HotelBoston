@@ -15,9 +15,12 @@ export function formatDate(value, withTime = false) {
   if (!value) return "—";
   const date = new Date(value.length === 10 ? `${value}T00:00:00` : value);
   if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleDateString("es-CL", withTime
+  const options = withTime
     ? { dateStyle: "medium", timeStyle: "short" }
-    : { dateStyle: "medium" });
+    : { dateStyle: "medium" };
+  return withTime
+    ? date.toLocaleString("es-CL", options)
+    : date.toLocaleDateString("es-CL", options);
 }
 
 export function formatClp(value) {
