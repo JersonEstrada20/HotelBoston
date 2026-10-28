@@ -1,0 +1,25 @@
+---
+import type { Lang } from "../data/site";
+
+interface Props {
+  lang: Lang;
+  name: string;
+  source: string;
+  logo: { src: string; width: number; height: number };
+  text: string;
+}
+
+const { lang, name, source, logo, text } = Astro.props;
+---
+
+<article class="review-card">
+  <img class="review-logo" src={logo.src} width={logo.width} height={logo.height} alt={source} loading="lazy" />
+  <blockquote lang="es">
+    <p>{text}</p>
+  </blockquote>
+  <footer>
+    <strong>{name}</strong>
+    <span>{source}</span>
+  </footer>
+  {lang === "en" && <p class="review-note">Original review in Spanish.</p>}
+</article>

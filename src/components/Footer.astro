@@ -1,0 +1,85 @@
+---
+import logoWhite from "../assets/logo-white.svg";
+import Icon from "./Icon.astro";
+import { ui, route, type RouteKey } from "../i18n/ui";
+import type { Lang } from "../data/site";
+import { site, images } from "../data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const year = new Date().getFullYear();
+
+const explore: { key: RouteKey; label: string }[] = [
+  { key: "home", label: t.nav.home },
+  { key: "rooms", label: t.nav.rooms },
+  { key: "salons", label: t.nav.salons },
+  { key: "gallery", label: t.nav.gallery },
+  { key: "location", label: t.nav.location },
+  { key: "faq", label: t.nav.faq },
+];
+---
+
+<footer class="site-footer">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <a class="brand brand-footer" href={route(lang, "home")} aria-label={`${site.name} — ${t.nav.home}`}>
+        <img src={logoWhite.src} width="150" height="58" alt={site.name} />
+      </a>
+      <p>{t.footer.tagline}</p>
+      <a class="footer-review" href={site.social.tripadvisor} target="_blank" rel="noopener noreferrer">
+        {t.footer.reviewCta}
+        <Icon name="arrow" size={16} />
+      </a>
+    </div>
+
+    <nav class="footer-column" aria-label={t.footer.explore}>
+      <h2>{t.footer.explore}</h2>
+      {explore.map((item) => (
+        <a href={route(lang, item.key)}>{item.label}</a>
+      ))}
+    </nav>
+
+    <div class="footer-column" aria-label={t.footer.contact}>
+      <h2>{t.footer.contact}</h2>
+      <a class="footer-contact" href={site.mapsUrl} target="_blank" rel="noopener noreferrer">
+        <Icon name="pin" size={17} />
+        <span>{site.address}<br />{site.city}, {site.country}</span>
+      </a>
+      {site.phones.map((phone) => (
+        <a class="footer-contact" href={`tel:${phone.href}`}>
+          <Icon name="phone" size={17} />
+          <span>{phone.label}</span>
+        </a>
+      ))}
+      <a class="footer-contact" href={`mailto:${site.email}`}>
+        <Icon name="mail" size={17} />
+        <span>{site.email}</span>
+      </a>
+      <a class="footer-contact" href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener noreferrer">
+        <Icon name="whatsapp" size={17} />
+        <span>{site.whatsappDisplay}</span>
+      </a>
+    </div>
+
+    <div class="footer-column footer-legal">
+      <h2>{t.footer.legal}</h2>
+      <a href={route(lang, "terms")}>{t.terms.title}</a>
+      <a href={route(lang, "privacy")}>{t.privacy.title}</a>
+      <div class="footer-seals">
+        <img src={images.seals.q.src} alt="Sello Q de Calidad Turística" width="50" height="185" loading="lazy" />
+        <img src={images.seals.esnna.src} alt="Certificación ESNNA" width="250" height="300" loading="lazy" />
+        <img src={images.seals.sernatur.src} alt="Certificación de calidad turística Sernatur" width="237" height="143" loading="lazy" />
+      </div>
+      <span class="footer-seals-label">{t.footer.certifications}</span>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <small>© {year} {site.name} · {site.city}, {site.country}. {t.footer.rights}</small>
+    <small>{t.footer.built}</small>
+  </div>
+</footer>

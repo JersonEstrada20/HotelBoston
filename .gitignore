@@ -1,4 +1,11 @@
 node_modules/
 .wrangler/
+.astro/
+dist/
+legacy/
+opencode.json
 hotel-boston-anterior.html
 favicon-comprobacion.png
+.env
+.env.local
+.env.*.local

@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../Icon.astro";
+import { ui, route } from "../../i18n/ui";
+import type { Lang } from "../../data/site";
+
+interface Props {
+  lang: Lang;
+  page: "terms" | "privacy";
+}
+
+const { lang, page } = Astro.props;
+const t = ui[lang];
+const content = t[page];
+const meta = t.meta[page];
+---
+
+<BaseLayout lang={lang} title={meta.title} description={meta.description} routeKey={page}>
+  <article class="legal-page">
+    <p class="eyebrow">{content.eyebrow}</p>
+    <h1>{content.title}</h1>
+    <p class="legal-meta">{content.updated}</p>
+    <p class="legal-intro">{content.intro}</p>
+
+    {content.sections.map((section) => (
+      <section class="legal-section">
+        <h2>{section.title}</h2>
+        {section.body.map((paragraph) => <p>{paragraph}</p>)}
+      </section>
+    ))}
+
+    <div class="legal-contact">
+      <h2>{content.contactTitle}</h2>
+      <p>{content.contactCopy}</p>
+    </div>
+
+    <p class="reviews-cta">
+      <a href={route(lang, "home")}>
+        <Icon name="arrow" size={15} />
+        {lang === "es" ? "Volver al inicio" : "Back to home"}
+      </a>
+    </p>
+  </article>
+</BaseLayout>

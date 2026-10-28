@@ -1,0 +1,115 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../PageHero.astro";
+import SalonCard from "../SalonCard.astro";
+import Icon from "../Icon.astro";
+import CtaBand from "../CtaBand.astro";
+import { ui, route } from "../../i18n/ui";
+import type { AmenityKey, Lang } from "../../data/site";
+import { salons } from "../../data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const meta = t.meta.salons;
+
+const title = lang === "es" ? "Un lugar para cada <em>ocasión</em>." : "A place for every <em>occasion</em>.";
+const heroImage = salons[1].image;
+
+const amenityIcons = {
+  attention: "sparkle",
+  breakfast: "coffee",
+  parking: "parking",
+  wifi: "wifi",
+  tv: "tv",
+  heating: "heating",
+  bathroom: "bath",
+  phone: "phone",
+  commonAreas: "users",
+  whiteboard: "check",
+  projector: "tv",
+  catering: "coffee",
+} as const;
+
+const equipment: AmenityKey[] = [
+  "whiteboard",
+  "projector",
+  "wifi",
+  "heating",
+  "catering",
+  "commonAreas",
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={meta.title}
+  description={meta.description}
+  routeKey="salons"
+  image={heroImage}
+>
+  <PageHero
+    lang={lang}
+    eyebrow={t.salons.eyebrow}
+    title={title}
+    copy={t.salons.copy}
+    image={heroImage}
+    imageAlt={lang === "es" ? "Salón Blanco del Hotel Boston" : "Blanco event room at Hotel Boston"}
+    crumbs={t.nav.salons}
+  />
+
+  <section class="page-section">
+    <div class="page-intro">
+      <h2>{lang === "es" ? "Espacios que se adaptan." : "Spaces that adapt."}</h2>
+      <p>{t.salons.note}</p>
+    </div>
+
+    <div class="salon-grid">
+      {salons.map((salon) => <SalonCard lang={lang} salon={salon} />)}
+    </div>
+
+    <div class="salon-equipment">
+      <div class="page-intro">
+        <div>
+          <p class="eyebrow">{t.salons.eyebrow}</p>
+          <h2>{t.salons.equipmentTitle}</h2>
+        </div>
+        <div>
+          <p class="eyebrow">{t.salons.usesTitle}</p>
+          <ul class="salon-uses">
+            {t.salons.uses.map((use) => <li>{use}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div class="amenities-grid">
+        {equipment.map((amenity) => (
+          <div>
+            <Icon name={amenityIcons[amenity]} size={22} />
+            <span>{t.amenities[amenity]}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="reviews-cta">
+      <a class="button" href={route(lang, "bookings")}>
+        {t.common.quoteEvent}
+        <Icon name="arrow" size={18} />
+      </a>
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    title={lang === "es" ? "Coordinemos tu próximo evento." : "Let us plan your next event."}
+    copy={
+      lang === "es"
+        ? "Cuéntanos la fecha, el tipo de evento y la cantidad de personas. Te ayudamos a elegir el salón adecuado."
+        : "Tell us the date, type of event and number of guests. We will help you choose the right room."
+    }
+  />
+</BaseLayout>

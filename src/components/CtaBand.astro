@@ -1,0 +1,40 @@
+---
+import Icon from "./Icon.astro";
+import { ui, route } from "../i18n/ui";
+import type { Lang } from "../data/site";
+import { site } from "../data/site";
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  copy?: string;
+}
+
+const { lang, title, copy } = Astro.props;
+const t = ui[lang];
+const message =
+  lang === "es"
+    ? "Hola, quisiera consultar disponibilidad en Hotel Boston."
+    : "Hello, I would like to ask about availability at Hotel Boston.";
+const whatsappUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
+---
+
+<section class="cta-band">
+  <div class="cta-band-inner">
+    <div class="cta-band-copy">
+      <p class="eyebrow light">{t.home.contactEyebrow}</p>
+      <h2>{title ?? t.home.finalTitle}</h2>
+      <p>{copy ?? t.home.finalCopy}</p>
+    </div>
+    <div class="cta-band-actions">
+      <a class="button button-light" href={route(lang, "bookings")}>
+        {t.common.bookStay}
+        <Icon name="arrow" size={18} />
+      </a>
+      <a class="button button-ghost-light" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+        <Icon name="whatsapp" size={18} />
+        {t.common.whatsapp}
+      </a>
+    </div>
+  </div>
+</section>

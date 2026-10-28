@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+import { ui, route } from "../../i18n/ui";
+
+const lang = "en" as const;
+const t = ui[lang];
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${t.notFound.title} | Hotel Boston`}
+  description={t.notFound.copy}
+  noindex
+>
+  <section class="not-found">
+    <div>
+      <p class="eyebrow">{t.notFound.eyebrow}</p>
+      <h1>{t.notFound.title}</h1>
+      <p>{t.notFound.copy}</p>
+      <div class="hero-actions">
+        <a class="button" href={route(lang, "home")}>
+          {t.notFound.cta}
+          <Icon name="arrow" size={18} />
+        </a>
+        <a class="button button-outline" href={route(lang, "rooms")}>
+          {t.common.seeRooms}
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,60 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../PageHero.astro";
+import Icon from "../Icon.astro";
+import CtaBand from "../CtaBand.astro";
+import { ui, route } from "../../i18n/ui";
+import type { Lang } from "../../data/site";
+import { images } from "../../data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const meta = t.meta.faq;
+
+const title =
+  lang === "es" ? "Todo lo que necesitas <em>saber</em>." : "Everything you need to <em>know</em>.";
+---
+
+<BaseLayout
+  lang={lang}
+  title={meta.title}
+  description={meta.description}
+  routeKey="faq"
+  image={images.heroSuite}
+>
+  <PageHero
+    lang={lang}
+    eyebrow={t.faq.eyebrow}
+    title={title}
+    copy={t.faq.copy}
+    image={images.heroSuite}
+    imageAlt={lang === "es" ? "Habitación del Hotel Boston" : "Room at Hotel Boston"}
+    crumbs={t.nav.faq}
+  />
+
+  <section class="page-section">
+    <div class="faq-list">
+      {t.faq.items.map((item) => (
+        <details>
+          <summary>
+            <span>{item.q}</span>
+            <Icon name="chevron" size={20} />
+          </summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+    <p class="faq-cta">
+      <a class="button" href={route(lang, "bookings")}>
+        {t.faq.cta}
+        <Icon name="arrow" size={18} />
+      </a>
+    </p>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>

@@ -1,0 +1,184 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../PageHero.astro";
+import Icon from "../Icon.astro";
+import CtaBand from "../CtaBand.astro";
+import SectionHeading from "../SectionHeading.astro";
+import { ui, formatClp, route } from "../../i18n/ui";
+import type { AmenityKey, Lang } from "../../data/site";
+import { roomTypes, site } from "../../data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const meta = t.meta.rooms;
+
+const title = lang === "es" ? "Descanso a tu <em>medida</em>." : "Rest on your <em>terms</em>.";
+
+const amenityIcons = {
+  attention: "sparkle",
+  breakfast: "coffee",
+  parking: "parking",
+  wifi: "wifi",
+  tv: "tv",
+  heating: "heating",
+  bathroom: "bath",
+  phone: "phone",
+  commonAreas: "users",
+  whiteboard: "check",
+  projector: "tv",
+  catering: "coffee",
+} as const;
+
+const roomAmenities: AmenityKey[] = [
+  "breakfast",
+  "tv",
+  "wifi",
+  "heating",
+  "bathroom",
+  "phone",
+  "parking",
+  "commonAreas",
+];
+
+const heroImage = roomTypes[2].image;
+---
+
+<BaseLayout
+  lang={lang}
+  title={meta.title}
+  description={meta.description}
+  routeKey="rooms"
+  image={heroImage}
+>
+  <PageHero
+    lang={lang}
+    eyebrow={t.rooms.eyebrow}
+    title={title}
+    copy={t.rooms.copy}
+    image={heroImage}
+    imageAlt={lang === "es" ? "Suite del Hotel Boston" : "Suite at Hotel Boston"}
+    crumbs={t.nav.rooms}
+  />
+
+  <section class="page-section">
+    <div class="page-intro">
+      <h2>{t.rooms.introTitle}</h2>
+      <p>{t.rooms.introText}</p>
+    </div>
+
+    {roomTypes.map((room, index) => {
+      const name = room.name[lang];
+      const bookingHref = `${route(lang, "bookings")}?habitacion=${room.slug}#solicitud`;
+      const whatsappMessage =
+        lang === "es"
+          ? `Hola, quisiera consultar disponibilidad para la habitación ${name} en Hotel Boston.`
+          : `Hello, I would like to ask about availability for the ${name} room at Hotel Boston.`;
+      return (
+        <article class="room-detail" id={room.slug}>
+          <div class="room-detail-media">
+            {room.gallery.map((image, imageIndex) => {
+              const imageClass =
+                imageIndex === 0
+                  ? "room-detail-main"
+                  : room.gallery.length === 2
+                    ? "room-detail-wide"
+                    : undefined;
+              return (
+                <Image
+                  src={image}
+                  alt={`${name} — Hotel Boston`}
+                  widths={[480, 720, 1100]}
+                  sizes="(max-width: 900px) 100vw, 55vw"
+                  class={imageClass}
+                  loading={index === 0 && imageIndex === 0 ? "eager" : "lazy"}
+                />
+              );
+            })}
+          </div>
+
+          <div class="room-detail-body">
+            <p class="eyebrow">
+              {String(index + 1).padStart(2, "0")} · {t.rooms.detailTitle}
+            </p>
+            <h2>{name}</h2>
+            <p>{room.description[lang]}</p>
+
+            <div class="room-facts">
+              <div>
+                <Icon name="users" size={19} />
+                <span>{t.common.capacity}</span>
+                <strong>{room.capacity} {t.common.people}</strong>
+              </div>
+              <div>
+                <Icon name="ruler" size={19} />
+                <span>{t.common.size}</span>
+                <strong>{room.size}</strong>
+              </div>
+              <div>
+                <Icon name="bed" size={19} />
+                <span>{t.common.beds}</span>
+                <strong>{room.beds[lang]}</strong>
+              </div>
+            </div>
+
+            <div class="room-rates">
+              {room.prices.map((price) => (
+                <div class="room-rate">
+                  <span>{price.label[lang]}</span>
+                  <strong>{formatClp(price.amount, lang)}</strong>
+                </div>
+              ))}
+            </div>
+            <p class="price-note">{t.rooms.priceNote}</p>
+
+            <ul class="amenity-list" aria-label={t.common.amenities}>
+              {room.amenities.map((amenity) => (
+                <li>
+                  <Icon name={amenityIcons[amenity]} size={15} />
+                  {t.amenities[amenity]}
+                </li>
+              ))}
+            </ul>
+
+            <div class="room-detail-actions">
+              <a class="button" href={bookingHref}>
+                {t.rooms.cta}
+                <Icon name="arrow" size={18} />
+              </a>
+              <a
+                class="button button-outline"
+                href={`https://wa.me/${site.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon name="whatsapp" size={18} />
+                {t.common.whatsapp}
+              </a>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </section>
+
+  <div class="band-deep">
+    <div class="section">
+      <SectionHeading title={t.rooms.amenitiesTitle} />
+      <div class="amenities-grid">
+        {roomAmenities.map((amenity) => (
+          <div>
+            <Icon name={amenityIcons[amenity]} size={22} />
+            <span>{t.amenities[amenity]}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <CtaBand lang={lang} />
+</BaseLayout>

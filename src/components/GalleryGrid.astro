@@ -1,0 +1,93 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import Icon from "./Icon.astro";
+import { ui } from "../i18n/ui";
+import type { Lang } from "../data/site";
+
+interface GalleryItem {
+  src: ImageMetadata;
+  caption: Record<Lang, string>;
+  alt: Record<Lang, string>;
+}
+
+interface Props {
+  lang: Lang;
+  items: GalleryItem[];
+  id?: string;
+}
+
+const { lang, items, id = "gallery" } = Astro.props;
+const t = ui[lang];
+---
+
+<div class="gallery-grid">
+  {items.map((item, index) => {
+    const caption = item.caption[lang];
+    const dialogId = `${id}-${index}`;
+    return (
+      <figure class="gallery-item">
+        <button
+          class="gallery-open"
+          type="button"
+          data-open={dialogId}
+          aria-label={`${t.common.openPhoto}: ${caption}`}
+        >
+          <Image
+            src={item.src}
+            alt={item.alt[lang]}
+            widths={[420, 720, 1000]}
+            sizes="(max-width: 640px) 100vw, (max-width: 1000px) 50vw, 33vw"
+            loading="lazy"
+          />
+          <span class="gallery-zoom" aria-hidden="true">
+            <Icon name="camera" size={18} />
+          </span>
+        </button>
+        <figcaption>{caption}</figcaption>
+      </figure>
+    );
+  })}
+</div>
+
+{items.map((item, index) => {
+  const caption = item.caption[lang];
+  return (
+    <dialog id={`${id}-${index}`} class="lightbox" aria-label={caption}>
+      <button class="lightbox-close" type="button" data-close aria-label={t.common.close}>
+        <Icon name="close" size={24} />
+      </button>
+      <Image
+        src={item.src}
+        alt={item.alt[lang]}
+        widths={[720, 1200, 1600]}
+        sizes="92vw"
+      />
+      <p>{caption}</p>
+    </dialog>
+  );
+})}
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-open]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = document.getElementById(button.dataset.open ?? "");
+      if (target instanceof HTMLDialogElement && !target.open) {
+        target.showModal();
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-close]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const dialog = button.closest("dialog");
+      dialog?.close();
+    });
+  });
+
+  document.querySelectorAll<HTMLDialogElement>("dialog.lightbox").forEach((dialog) => {
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  });
+</script>

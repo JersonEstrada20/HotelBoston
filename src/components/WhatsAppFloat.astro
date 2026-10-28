@@ -1,0 +1,40 @@
+---
+import Icon from "./Icon.astro";
+import { ui, route } from "../i18n/ui";
+import type { Lang } from "../data/site";
+import { site } from "../data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const message =
+  lang === "es"
+    ? "Hola, quisiera consultar disponibilidad en Hotel Boston."
+    : "Hello, I would like to ask about availability at Hotel Boston.";
+const whatsappUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
+---
+
+<a
+  class="whatsapp-float"
+  href={whatsappUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={t.common.whatsapp}
+>
+  <Icon name="whatsapp" size={26} />
+  <span>{t.common.whatsapp}</span>
+</a>
+
+<div class="mobile-cta-bar" aria-label={t.nav.book}>
+  <a class="button button-block" href={route(lang, "bookings")}>
+    <Icon name="calendar" size={18} />
+    {t.nav.book}
+  </a>
+  <a class="button button-outline button-block" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+    <Icon name="whatsapp" size={18} />
+    {t.common.whatsapp}
+  </a>
+</div>

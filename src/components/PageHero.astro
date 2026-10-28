@@ -1,0 +1,38 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import Breadcrumbs from "./Breadcrumbs.astro";
+import type { Lang } from "../data/site";
+
+interface Props {
+  lang: Lang;
+  eyebrow: string;
+  title: string;
+  copy?: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  crumbs: string;
+}
+
+const { lang, eyebrow, title, copy, image, imageAlt, crumbs } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="page-hero-media">
+    <Image
+      src={image}
+      alt={imageAlt}
+      widths={[720, 1080, 1600]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <Breadcrumbs lang={lang} label={crumbs} />
+    <p class="eyebrow light">{eyebrow}</p>
+    <h1 set:html={title} />
+    {copy && <p class="page-hero-copy">{copy}</p>}
+  </div>
+</section>

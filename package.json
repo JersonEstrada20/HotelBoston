@@ -1,12 +1,22 @@
 {
   "name": "hotel-boston-quillota",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "type": "module",
   "scripts": {
-    "deploy": "wrangler pages deploy public --project-name hotelboston",
-    "check": "node --check public/script.js"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name hotelboston"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.8.2",
     "wrangler": "^4.52.0"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.3"
   }
 }

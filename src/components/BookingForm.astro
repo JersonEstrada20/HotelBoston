@@ -1,0 +1,196 @@
+---
+import Icon from "./Icon.astro";
+import { ui, formatClp, route } from "../i18n/ui";
+import type { Lang } from "../data/site";
+import { roomTypes, salons, site } from "../data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<div class="booking-form-wrap" id="solicitud">
+  <form
+    class="booking-form"
+    data-booking-form
+    data-email={site.email}
+    data-whatsapp={site.whatsapp}
+    data-intro={t.bookings.requestIntro}
+    data-msg-dates={t.bookings.validationDates}
+    data-msg-email={t.bookings.openingEmail}
+    data-msg-whatsapp={t.bookings.openingWhatsapp}
+    novalidate
+  >
+    <div class="form-grid">
+      <label class="field" for="booking-name">
+        <span>{t.bookings.name}</span>
+        <input type="text" name="name" id="booking-name" autocomplete="name" required />
+      </label>
+
+      <label class="field" for="booking-email">
+        <span>{t.bookings.email}</span>
+        <input type="email" name="email" id="booking-email" autocomplete="email" required />
+      </label>
+
+      <label class="field" for="booking-phone">
+        <span>{t.bookings.phone}</span>
+        <input type="tel" name="phone" id="booking-phone" autocomplete="tel" required />
+      </label>
+
+      <label class="field" for="booking-room">
+        <span>{t.bookings.room}</span>
+        <select name="room" id="booking-room" required>
+          <option value="">{t.bookings.roomPlaceholder}</option>
+          <optgroup label={t.bookings.roomsGroup}>
+            {roomTypes.map((room) => (
+              <option value={`room:${room.slug}`}>
+                {room.name[lang]} — {formatClp(room.prices[0].amount, lang)}
+              </option>
+            ))}
+          </optgroup>
+          <optgroup label={t.bookings.salonsGroup}>
+            {salons.map((salon) => (
+              <option value={`salon:${salon.slug}`}>
+                Salón {salon.name} — {salon.capacity} {t.common.people}
+              </option>
+            ))}
+          </optgroup>
+        </select>
+      </label>
+
+      <label class="field" for="booking-arrival">
+        <span>{t.bookings.arrival}</span>
+        <input type="date" name="arrival" id="booking-arrival" required />
+      </label>
+
+      <label class="field" for="booking-departure">
+        <span>{t.bookings.departure}</span>
+        <input type="date" name="departure" id="booking-departure" required />
+      </label>
+
+      <label class="field" for="booking-guests">
+        <span>{t.bookings.guests}</span>
+        <input type="number" name="guests" id="booking-guests" min="1" max="100" value="2" required />
+      </label>
+
+      <label class="field field-full" for="booking-message">
+        <span>{t.bookings.message}</span>
+        <textarea name="message" id="booking-message" rows="4"></textarea>
+      </label>
+    </div>
+
+    <label class="checkbox-field" for="booking-consent">
+      <input type="checkbox" name="consent" id="booking-consent" required />
+      <span>
+        {t.bookings.consent}
+        <a href={route(lang, "privacy")} target="_blank" rel="noopener noreferrer">{t.privacy.title}</a>.
+      </span>
+    </label>
+
+    <div class="form-status" data-form-status role="status" aria-live="polite"></div>
+
+    <div class="form-actions">
+      <button class="button" type="submit">
+        <Icon name="mail" size={18} />
+        {t.bookings.submitEmail}
+      </button>
+      <button class="button button-outline" type="button" data-whatsapp-submit>
+        <Icon name="whatsapp" size={18} />
+        {t.bookings.submitWhatsapp}
+      </button>
+    </div>
+    <p class="form-note">{t.bookings.formNote}</p>
+  </form>
+</div>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-booking-form]");
+
+  if (form) {
+    const arrival = form.querySelector<HTMLInputElement>('[name="arrival"]');
+    const departure = form.querySelector<HTMLInputElement>('[name="departure"]');
+    const status = form.querySelector<HTMLElement>("[data-form-status]");
+    const whatsappButton = form.querySelector<HTMLButtonElement>("[data-whatsapp-submit]");
+    const roomSelect = form.querySelector<HTMLSelectElement>('[name="room"]');
+    const locale = document.documentElement.dataset.lang === "en" ? "en-US" : "es-CL";
+
+    const today = new Date();
+    const isoToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    if (arrival) arrival.min = isoToday;
+    if (departure) departure.min = isoToday;
+
+    const params = new URLSearchParams(window.location.search);
+    const roomParam = params.get("habitacion");
+    const salonParam = params.get("salon");
+    if (roomSelect) {
+      if (roomParam) roomSelect.value = `room:${roomParam}`;
+      if (salonParam) roomSelect.value = `salon:${salonParam}`;
+    }
+
+    const formatDate = (value: string) => {
+      if (!value) return "—";
+      const date = new Date(`${value}T00:00:00`);
+      return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(locale);
+    };
+
+    const getValue = (name: string) => {
+      const field = form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null;
+      if (!field) return "—";
+      if (field instanceof HTMLSelectElement) {
+        return field.selectedOptions[0]?.textContent?.trim() || field.value || "—";
+      }
+      if (field instanceof HTMLInputElement && field.type === "date") {
+        return formatDate(field.value);
+      }
+      return field.value.trim() || "—";
+    };
+
+    const labelFor = (name: string) => {
+      const label = form.querySelector<HTMLLabelElement>(`label[for="${name}"]`);
+      return label?.querySelector("span")?.textContent?.trim() || name;
+    };
+
+    const setStatus = (message: string, kind: "success" | "error") => {
+      if (!status) return;
+      status.textContent = message;
+      status.className = `form-status is-${kind}`;
+    };
+
+    const validate = () => {
+      if (departure) departure.setCustomValidity("");
+      if (arrival && departure && arrival.value && departure.value && departure.value <= arrival.value) {
+        if (departure) departure.setCustomValidity(form.dataset.msgDates || "");
+        departure?.reportValidity();
+        return false;
+      }
+      return form.reportValidity();
+    };
+
+    const buildMessage = () => {
+      const lines = form.dataset.intro ? [form.dataset.intro, ""] : [];
+      ["name", "email", "phone", "room", "arrival", "departure", "guests", "message"].forEach((name) => {
+        lines.push(`${labelFor(name)}: ${getValue(name)}`);
+      });
+      return lines.join("\n");
+    };
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!validate()) return;
+      const subject = `${form.dataset.intro || "Hotel Boston"} — ${getValue("name")}`;
+      const mailto = `mailto:${form.dataset.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(buildMessage())}`;
+      window.location.href = mailto;
+      setStatus(form.dataset.msgEmail || "", "success");
+    });
+
+    whatsappButton?.addEventListener("click", () => {
+      if (!validate()) return;
+      const url = `https://wa.me/${form.dataset.whatsapp}?text=${encodeURIComponent(buildMessage())}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+      setStatus(form.dataset.msgWhatsapp || "", "success");
+    });
+  }
+</script>

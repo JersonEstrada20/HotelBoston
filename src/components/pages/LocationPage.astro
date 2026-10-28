@@ -1,0 +1,120 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../PageHero.astro";
+import Icon from "../Icon.astro";
+import CtaBand from "../CtaBand.astro";
+import { ui } from "../../i18n/ui";
+import type { Lang } from "../../data/site";
+import { site, images } from "../../data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const meta = t.meta.location;
+
+const title = lang === "es" ? "A pasos del <em>centro</em>." : "Steps from <em>downtown</em>.";
+---
+
+<BaseLayout
+  lang={lang}
+  title={meta.title}
+  description={meta.description}
+  routeKey="location"
+  image={images.heroEntrance}
+>
+  <PageHero
+    lang={lang}
+    eyebrow={t.location.eyebrow}
+    title={title}
+    copy={t.location.copy}
+    image={images.heroEntrance}
+    imageAlt={lang === "es" ? "Entrada de Hotel Boston en Quillota" : "Entrance of Hotel Boston in Quillota"}
+    crumbs={t.nav.location}
+  />
+
+  <section class="page-section">
+    <div class="contact-grid">
+      <div class="contact-cards">
+        <div class="contact-card">
+          <Icon name="pin" size={22} />
+          <h2>{t.location.addressTitle}</h2>
+          <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer">
+            {site.address}<br />{site.city}, {site.country}
+          </a>
+        </div>
+
+        <div class="contact-card">
+          <Icon name="phone" size={22} />
+          <h2>{t.location.phonesTitle}</h2>
+          {site.phones.map((phone) => <a href={`tel:${phone.href}`}>{phone.label}</a>)}
+        </div>
+
+        <div class="contact-card">
+          <Icon name="mail" size={22} />
+          <h2>{t.location.emailTitle}</h2>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </div>
+
+        <div class="contact-card">
+          <Icon name="whatsapp" size={22} />
+          <h2>{t.location.whatsappTitle}</h2>
+          <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener noreferrer">
+            {site.whatsappDisplay}
+          </a>
+        </div>
+
+        <div class="contact-card">
+          <Icon name="clock" size={22} />
+          <h2>{lang === "es" ? "Horarios" : "Times"}</h2>
+          <p>
+            {lang === "es" ? "Check-in desde las 13:00" : "Check-in from 1:00 pm"}
+            <br />
+            {lang === "es" ? "Check-out hasta las 12:00" : "Check-out until 12:00 pm"}
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <div class="map-frame">
+          <iframe
+            src={site.mapEmbed}
+            title={lang === "es" ? "Mapa de ubicación de Hotel Boston" : "Hotel Boston location map"}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="map-actions">
+          <a class="button" href={site.mapsUrl} target="_blank" rel="noopener noreferrer">
+            <Icon name="pin" size={18} />
+            {t.common.map}
+          </a>
+          <a class="button button-outline" href={site.wazeUrl} target="_blank" rel="noopener noreferrer">
+            {t.common.waze}
+            <Icon name="arrow" size={18} />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="location-info">
+      <div>
+        <h2>{t.location.howTitle}</h2>
+        <p>{t.location.howCopy}</p>
+      </div>
+      <div>
+        <h2>{t.location.parkingTitle}</h2>
+        <p>{t.location.parkingCopy}</p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    lang={lang}
+    title={t.location.ctaTitle}
+    copy={t.location.ctaCopy}
+  />
+</BaseLayout>

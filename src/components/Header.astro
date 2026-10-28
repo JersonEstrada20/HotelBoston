@@ -1,0 +1,122 @@
+---
+import logo from "../assets/logo.svg";
+import Icon from "./Icon.astro";
+import { ui, route, otherLang, type RouteKey } from "../i18n/ui";
+import type { Lang } from "../data/site";
+import { site } from "../data/site";
+
+interface Props {
+  lang: Lang;
+  routeKey?: RouteKey;
+}
+
+const { lang, routeKey } = Astro.props;
+const t = ui[lang];
+const other = otherLang(lang);
+
+const navItems: { key: RouteKey; label: string }[] = [
+  { key: "home", label: t.nav.home },
+  { key: "rooms", label: t.nav.rooms },
+  { key: "salons", label: t.nav.salons },
+  { key: "gallery", label: t.nav.gallery },
+  { key: "location", label: t.nav.location },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isActive = (key: RouteKey) => {
+  const path = route(lang, key).replace(/\/+$/, "") || "/";
+  return currentPath === path;
+};
+const alternatePath = routeKey ? route(other, routeKey) : route(other, "home");
+---
+
+<header class="site-header" data-header>
+  <div class="header-inner">
+    <a class="brand" href={route(lang, "home")} aria-label={`${site.name} — ${t.nav.home}`}>
+      <img src={logo.src} width="138" height="54" alt={site.name} />
+    </a>
+
+    <nav class="desktop-nav" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
+      {navItems.map((item) => (
+        <a
+          href={route(lang, item.key)}
+          aria-current={isActive(item.key) ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="header-actions">
+      <a
+        class="lang-switch"
+        href={alternatePath}
+        hreflang={other}
+        lang={other}
+        aria-label={t.common.languageLabel}
+      >
+        {other === "en" ? "EN" : "ES"}
+      </a>
+      <a class="button button-small header-book" href={route(lang, "bookings")}>
+        {t.header.book}
+        <Icon name="arrow" size={16} />
+      </a>
+      <button
+        class="menu-toggle"
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label={t.common.menuOpen}
+      >
+        <Icon name="menu" size={24} />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div
+  id="mobile-menu"
+  class="mobile-menu"
+  data-menu
+  aria-hidden="true"
+  inert
+>
+  <div class="mobile-menu-head">
+    <a class="brand" href={route(lang, "home")} aria-label={`${site.name} — ${t.nav.home}`}>
+      <img src={logo.src} width="124" height="48" alt={site.name} />
+    </a>
+    <button class="menu-close" type="button" data-menu-close aria-label={t.common.menuClose}>
+      <Icon name="close" size={26} />
+    </button>
+  </div>
+
+  <nav class="mobile-nav" aria-label={lang === "es" ? "Navegación móvil" : "Mobile navigation"}>
+    {navItems.map((item) => (
+      <a href={route(lang, item.key)} aria-current={isActive(item.key) ? "page" : undefined}>
+        {item.label}
+        <Icon name="arrow" size={18} />
+      </a>
+    ))}
+    <a href={route(lang, "faq")}>{t.nav.faq}<Icon name="arrow" size={18} /></a>
+  </nav>
+
+  <div class="mobile-menu-actions">
+    <a class="button button-block" href={route(lang, "bookings")}>
+      {t.header.book}
+      <Icon name="arrow" size={18} />
+    </a>
+    <a class="button button-outline button-block" href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener noreferrer">
+      <Icon name="whatsapp" size={18} />
+      {t.common.whatsapp}
+    </a>
+    <a
+      class="lang-switch lang-switch-mobile"
+      href={alternatePath}
+      hreflang={other}
+      lang={other}
+    >
+      {t.common.language}
+    </a>
+  </div>
+</div>

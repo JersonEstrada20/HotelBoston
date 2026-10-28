@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../PageHero.astro";
+import GalleryGrid from "../GalleryGrid.astro";
+import CtaBand from "../CtaBand.astro";
+import { ui } from "../../i18n/ui";
+import type { Lang } from "../../data/site";
+import { site, images, gallery } from "../../data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const meta = t.meta.gallery;
+
+const title = lang === "es" ? "Conoce el <em>hotel</em>." : "Get to know the <em>hotel</em>.";
+---
+
+<BaseLayout
+  lang={lang}
+  title={meta.title}
+  description={meta.description}
+  routeKey="gallery"
+  image={images.heroEntrance}
+>
+  <PageHero
+    lang={lang}
+    eyebrow={t.gallery.eyebrow}
+    title={title}
+    copy={t.gallery.copy}
+    image={images.heroEntrance}
+    imageAlt={lang === "es" ? "Entrada de Hotel Boston en Quillota" : "Entrance of Hotel Boston in Quillota"}
+    crumbs={t.nav.gallery}
+  />
+
+  <section class="page-section">
+    <div class="page-intro">
+      <h2>{lang === "es" ? "Cada rincón, a su manera." : "Every corner, in its own way."}</h2>
+      <p>
+        {t.gallery.note}
+        {" "}
+        <a class="text-link" href={site.social.booking} target="_blank" rel="noopener noreferrer">
+          {lang === "es" ? "Ver en Booking.com" : "View on Booking.com"}
+        </a>
+      </p>
+    </div>
+
+    <GalleryGrid lang={lang} items={gallery} />
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>

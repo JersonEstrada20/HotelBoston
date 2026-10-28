@@ -1,0 +1,348 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../Icon.astro";
+import SectionHeading from "../SectionHeading.astro";
+import RoomCard from "../RoomCard.astro";
+import ReviewCard from "../ReviewCard.astro";
+import SealRow from "../SealRow.astro";
+import CtaBand from "../CtaBand.astro";
+import { ui, formatClp, route } from "../../i18n/ui";
+import type { Lang } from "../../data/site";
+import { site, images, roomTypes, reviews } from "../../data/site";
+import eventsImage from "../../assets/events.jpg";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const meta = t.meta.home;
+
+const heroTitle =
+  lang === "es" ? "Descansa como en <em>casa</em>." : "Rest like you are at <em>home</em>.";
+const roomsTitle =
+  lang === "es" ? "Tu pausa empieza <em>aquí</em>." : "Your pause starts <em>here</em>.";
+const promoTitle =
+  lang === "es" ? "Noche <em>Romántica</em>." : "<em>Romantic</em> Night.";
+const eventsTitle =
+  lang === "es" ? "Momentos que merecen un <em>lugar</em>." : "Moments that deserve a <em>place</em>.";
+const historyTitle =
+  lang === "es" ? "Una idea nacida en <em>Quillota</em>." : "An idea born in <em>Quillota</em>.";
+
+const heroAlt =
+  lang === "es"
+    ? "Habitación Suite del Hotel Boston en Quillota"
+    : "Suite room at Hotel Boston in Quillota";
+
+const whatsappMessage =
+  lang === "es"
+    ? "Hola, quisiera consultar disponibilidad en Hotel Boston."
+    : "Hello, I would like to ask about availability at Hotel Boston.";
+const whatsappUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+
+const features = [
+  {
+    icon: "coffee" as const,
+    title: t.amenities.breakfast,
+    copy: lang === "es" ? "Incluido en tu estadía" : "Included with your stay",
+  },
+  {
+    icon: "parking" as const,
+    title: t.amenities.parking,
+    copy: lang === "es" ? "Para huéspedes" : "For guests",
+  },
+  {
+    icon: "wifi" as const,
+    title: t.amenities.wifi,
+    copy: lang === "es" ? "En todo el hotel" : "Throughout the hotel",
+  },
+  {
+    icon: "sparkle" as const,
+    title: t.amenities.attention,
+    copy: lang === "es" ? "Una bienvenida cercana" : "A warm welcome",
+  },
+];
+
+const base = Astro.site ?? new URL("https://hotelboston.pages.dev");
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Hotel",
+    name: site.name,
+    description: meta.description,
+    url: new URL(route(lang, "home"), base).toString(),
+    image: new URL(images.heroSuite.src, base).toString(),
+    telephone: site.phones[0].label,
+    email: site.email,
+    priceRange: "CLP 72.000 - CLP 90.000",
+    checkinTime: "13:00",
+    checkoutTime: "12:00",
+    petsAllowed: false,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.address,
+      addressLocality: site.city,
+      addressRegion: "Región de Valparaíso",
+      addressCountry: "CL",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: site.coords.lat,
+      longitude: site.coords.lng,
+    },
+    amenityFeature: [
+      { "@type": "LocationFeatureSpecification", name: t.amenities.breakfast, value: true },
+      { "@type": "LocationFeatureSpecification", name: t.amenities.parking, value: true },
+      { "@type": "LocationFeatureSpecification", name: t.amenities.wifi, value: true },
+      { "@type": "LocationFeatureSpecification", name: t.amenities.heating, value: true },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    url: new URL("/", base).toString(),
+    inLanguage: ["es-CL", "en"],
+  },
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={meta.title}
+  description={meta.description}
+  routeKey="home"
+  image={images.heroSuite}
+  schema={schema}
+>
+  <section class="hero">
+    <div class="hero-media">
+      <Image
+        src={images.heroSuite}
+        alt={heroAlt}
+        widths={[900, 1400, 2000]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="eyebrow light">{t.home.eyebrow}</p>
+      <h1 set:html={heroTitle} />
+      <p class="hero-copy">{t.home.copy}</p>
+      <div class="hero-actions">
+        <a class="button button-light" href={route(lang, "bookings")}>
+          {t.home.cta}
+          <Icon name="arrow" size={18} />
+        </a>
+        <a class="button button-ghost-light" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+          <Icon name="whatsapp" size={18} />
+          {t.common.whatsapp}
+        </a>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <span>{t.home.since}</span>
+      <a class="hero-scroll" href="#bienvenida">
+        {lang === "es" ? "Descubrir" : "Discover"}
+        <Icon name="chevron" size={16} />
+      </a>
+    </div>
+  </section>
+
+  <section class="section intro" id="bienvenida">
+    <div>
+      <p class="eyebrow">{t.home.introEyebrow}</p>
+      <h2>{t.home.introTitle}</h2>
+    </div>
+    <div class="intro-copy">
+      <p>{t.home.introText}</p>
+      <p>{t.home.introText2}</p>
+      <SealRow lang={lang} />
+      <a class="text-link" href={route(lang, "location")}>
+        {t.home.locationLink}
+        <Icon name="arrow" size={16} />
+      </a>
+    </div>
+  </section>
+
+  <div class="features">
+    {features.map((feature) => (
+      <div class="feature">
+        <Icon name={feature.icon} size={26} />
+        <strong>{feature.title}</strong>
+        <span>{feature.copy}</span>
+      </div>
+    ))}
+  </div>
+
+  <section class="band-deep">
+    <div class="section">
+      <SectionHeading
+        eyebrow={t.home.roomsEyebrow}
+        title={roomsTitle}
+        copy={t.home.roomsCopy}
+      />
+      <div class="rooms-grid">
+        {roomTypes.map((room, index) => <RoomCard lang={lang} room={room} index={index} />)}
+      </div>
+      <div class="reviews-cta">
+        <a href={route(lang, "rooms")}>
+          {lang === "es" ? "Ver todas las habitaciones" : "View all rooms"}
+          <Icon name="arrow" size={15} />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="promotion">
+    <div class="promotion-media">
+      <Image
+        src={images.promoRomantica}
+        alt={lang === "es" ? "Promoción Noche Romántica de Hotel Boston" : "Hotel Boston Romantic Night promotion"}
+        widths={[600, 1000, 1400]}
+        sizes="(max-width: 900px) 100vw, 50vw"
+        loading="lazy"
+      />
+    </div>
+    <div class="promotion-copy">
+      <p class="eyebrow">{t.home.promoEyebrow}</p>
+      <h2 set:html={promoTitle} />
+      <p>{t.home.promoCopy}</p>
+      <p class="promotion-includes">{t.home.promoIncludes}</p>
+      <div class="promotion-action">
+        <div>
+          <strong>{formatClp(80000, lang)}</strong>
+          <small>{t.common.inclVat}</small>
+        </div>
+        <a class="button" href={`${route(lang, "bookings")}?habitacion=suite#solicitud`}>
+          {t.home.promoRequest}
+          <Icon name="arrow" size={18} />
+        </a>
+      </div>
+      <p class="price-note">{t.home.promoNote}</p>
+    </div>
+  </section>
+
+  <section class="events">
+    <div class="events-media">
+      <Image
+        src={eventsImage}
+        alt={lang === "es" ? "Salón de eventos del Hotel Boston" : "Event room at Hotel Boston"}
+        widths={[600, 1000, 1400]}
+        sizes="(max-width: 900px) 100vw, 50vw"
+        loading="lazy"
+      />
+    </div>
+    <div class="events-copy">
+      <p class="eyebrow light">{t.home.eventsEyebrow}</p>
+      <h2 set:html={eventsTitle} />
+      <p>{t.home.eventsCopy}</p>
+      <a class="button button-light" href={route(lang, "salons")}>
+        {t.home.eventsCta}
+        <Icon name="arrow" size={18} />
+      </a>
+    </div>
+  </section>
+
+  <section class="band-white">
+    <div class="section history">
+      <div class="history-photo">
+        <Image
+          src={images.founderMariana}
+          alt={lang === "es" ? "Mariana Silva, fundadora de Hotel Boston" : "Mariana Silva, founder of Hotel Boston"}
+          widths={[220, 330, 480]}
+          sizes="(max-width: 900px) 60vw, 330px"
+          loading="lazy"
+        />
+      </div>
+      <div class="history-story">
+        <p class="eyebrow">{t.home.historyEyebrow}</p>
+        <h2 set:html={historyTitle} />
+        <p>{t.home.historyText}</p>
+        <blockquote class="history-quote">“{t.home.historyQuote}”</blockquote>
+        <p class="history-signature">{t.home.historySignature}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote-section">
+    <div class="quote-mark" aria-hidden="true">“</div>
+    <blockquote>{t.home.quote}</blockquote>
+    <p class="quote-caption">{t.home.quoteCaption}</p>
+  </section>
+
+  <section class="band-deep">
+    <div class="section">
+      <SectionHeading
+        eyebrow={t.home.reviewsEyebrow}
+        title={t.home.reviewsTitle}
+        copy={t.home.reviewsNote}
+      />
+      <div class="reviews-grid">
+        {reviews.map((review) => (
+          <ReviewCard
+            lang={lang}
+            name={review.name}
+            source={review.source}
+            logo={review.logo}
+            text={review.text}
+          />
+        ))}
+      </div>
+      <p class="reviews-cta">
+        <a href={site.social.tripadvisor} target="_blank" rel="noopener noreferrer">
+          {t.home.reviewsCta}
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="contact">
+    <div class="contact-map">
+      <iframe
+        src={site.mapEmbed}
+        title={lang === "es" ? "Mapa de ubicación de Hotel Boston" : "Hotel Boston location map"}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <div class="contact-info">
+      <p class="eyebrow">{t.home.contactEyebrow}</p>
+      <h2>{t.home.contactTitle}</h2>
+      <p>{t.home.contactCopy}</p>
+      <div class="contact-details">
+        <p>
+          <strong>{t.location.addressTitle}</strong>
+          <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer">
+            {site.address}<br />{site.city}, {site.country}
+          </a>
+        </p>
+        <p>
+          <strong>{t.location.phonesTitle}</strong>
+          {site.phones.map((phone) => <a href={`tel:${phone.href}`}>{phone.label}</a>)}
+        </p>
+        <p>
+          <strong>{t.location.emailTitle}</strong>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </p>
+        <p>
+          <strong>{t.location.whatsappTitle}</strong>
+          <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener noreferrer">
+            {site.whatsappDisplay}
+          </a>
+        </p>
+      </div>
+      <a class="button" href={route(lang, "bookings")}>
+        {t.common.bookStay}
+        <Icon name="arrow" size={18} />
+      </a>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>
