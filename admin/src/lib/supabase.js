@@ -58,6 +58,9 @@ export async function functionErrorMessage(error) {
   }
   const response = error.context;
   if (response && typeof response.clone === "function") {
+    if (response.status === 401) {
+      return "Tu sesión ya no es válida. Cierra sesión y vuelve a entrar.";
+    }
     try {
       const body = await response.clone().json();
       if (body?.error) return String(body.error);
