@@ -122,7 +122,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const status = alertText || (event === "reconnected"
       ? "El bot volvió a conectarse a WhatsApp."
       : event === "logged_out"
-        ? "WhatsApp cerró la sesión del asistente. Debes iniciar el proceso y volver a vincular el número oficial del Fundo."
+        ? "WhatsApp cerró la sesión del asistente. Debes iniciar el proceso y volver a vincular el número oficial de Hotel Boston."
         : "El bot perdió conexión con WhatsApp y está intentando reconectarse automáticamente. Si el equipo donde corre se apagó, el asistente no responderá hasta que se inicie de nuevo.");
     const safeStatus = escapeHtml(status);
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {

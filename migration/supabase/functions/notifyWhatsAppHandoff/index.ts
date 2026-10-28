@@ -63,8 +63,8 @@ Deno.serve(async (req: Request): Promise<Response> => {
         sender: { email: senderEmail, name: senderName },
         to: recipients.map((email) => ({ email })),
         subject: "Solicitud de atención humana por WhatsApp — Hotel Boston",
-        htmlContent: `<p>Una persona solicita atención humana por WhatsApp.</p><p><strong>Teléfono:</strong> ${safePhone}</p><p><strong>Etapa del asistente:</strong> ${safeStage}</p><p>Continúa la conversación desde un dispositivo vinculado al WhatsApp oficial del Fundo.</p><p><a href="https://hotelboston.pages.dev/admin">Abrir el panel de recepción</a></p>`,
-        textContent: `Una persona solicita atención humana por WhatsApp.\nTeléfono: ${phoneText}\nEtapa: ${stage}\nContinúa desde un dispositivo vinculado al WhatsApp oficial del Fundo.\nhttps://hotelboston.pages.dev/admin`,
+        htmlContent: `<p>Una persona solicita atención humana por WhatsApp.</p><p><strong>Teléfono:</strong> ${safePhone}</p><p><strong>Etapa del asistente:</strong> ${safeStage}</p><p>Continúa la conversación desde un dispositivo vinculado al WhatsApp oficial de Hotel Boston.</p><p><a href="https://hotelboston.pages.dev/admin">Abrir el panel de recepción</a></p>`,
+        textContent: `Una persona solicita atención humana por WhatsApp.\nTeléfono: ${phoneText}\nEtapa: ${stage}\nContinúa desde un dispositivo vinculado al WhatsApp oficial de Hotel Boston.\nhttps://hotelboston.pages.dev/admin`,
       }),
     });
     if (!response.ok) throw new Error("Brevo no aceptó la notificación.");

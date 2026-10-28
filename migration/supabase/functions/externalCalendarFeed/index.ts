@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     const { data: bookings, error } = await db.from("booking_request")
       .select("id, arrival_date, departure_date, updated_date").eq("cabin", exportRow.cabin.name).eq("status", "confirmada").gte("departure_date", new Date().toISOString().slice(0, 10));
     if (error) throw error;
-    const events = (bookings || []).map((booking) => ["BEGIN:VEVENT", `UID:fundo-${booking.id}@fundoelgrillo`, `DTSTAMP:${stamp(booking.updated_date.slice(0, 10))}`, `DTSTART;VALUE=DATE:${booking.arrival_date.replaceAll("-", "")}`, `DTEND;VALUE=DATE:${booking.departure_date.replaceAll("-", "")}`, "SUMMARY:No disponible", "END:VEVENT"].join("\r\n"));
+    const events = (bookings || []).map((booking) => ["BEGIN:VEVENT", `UID:hotelboston-${booking.id}@hotelboston`, `DTSTAMP:${stamp(booking.updated_date.slice(0, 10))}`, `DTSTART;VALUE=DATE:${booking.arrival_date.replaceAll("-", "")}`, `DTEND;VALUE=DATE:${booking.departure_date.replaceAll("-", "")}`, "SUMMARY:No disponible", "END:VEVENT"].join("\r\n"));
     return text(["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Hotel Boston//Reservas//ES", "CALSCALE:GREGORIAN", ...events, "END:VCALENDAR", ""].join("\r\n"));
   } catch (error) {
     console.error("externalCalendarFeed falló:", error instanceof Error ? error.name : "error desconocido");
