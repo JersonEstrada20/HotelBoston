@@ -4,6 +4,36 @@ import { reservaConfirmadaHtml, reservaConfirmadaText, reservaRechazadaHtml, res
 const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
+// Avisa al ERP de la confirmación (con monto) o de la anulación. Devuelve true/false,
+// o null si la integración no está configurada.
+async function syncWithErp(status: string, previousStatus: string, booking: Record<string, unknown>, totalClp: number): Promise<boolean | null> {
+  const erpUrl = Deno.env.get("ERP_INTEGRATION_URL");
+  const erpKey = Deno.env.get("ERP_INTEGRATION_KEY");
+  if (!erpUrl || !erpKey) return null;
+  let body: Record<string, unknown> | null = null;
+  if (status === "confirmada") {
+    body = { action: "confirm", external_id: booking.id, cabin_name: booking.cabin, guest_name: booking.name, guest_email: booking.email, guest_phone: booking.phone, check_in: booking.arrival_date, check_out: booking.departure_date, total_clp: totalClp };
+  } else if (previousStatus === "confirmada") {
+    body = { action: "cancel", external_id: booking.id, reason: "Reserva anulada desde el panel del establecimiento" };
+  }
+  if (!body) return null;
+  try {
+    const response = await fetch(`${erpUrl.replace(/\/$/, "")}/api/integrations/bookings`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Integration-Key": erpKey },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      console.error("El ERP rechazó el aviso:", response.status, await response.text());
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error("No se pudo conectar con el ERP:", error);
+    return false;
+  }
+}
+
 Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   try {
@@ -21,13 +51,17 @@ Deno.serve(async (req: Request): Promise<Response> => {
     if (userError || !user) return json({ error: "No autorizado." }, 401);
     const { data: profile, error: profileError } = await supabase.from("profiles").select("role").eq("id", user.id).single();
     if (profileError || !["admin", "recepcion", "recepcionista"].includes(profile?.role)) return json({ error: "No tienes permiso para gestionar solicitudes." }, 403);
-    const { bookingId, status } = await req.json();
+    const { bookingId, status, amount } = await req.json();
+    const totalClp = Math.round(Number(amount) || 0);
+    if (status === "confirmada" && totalClp <= 0) return json({ error: "Indica el monto pagado para confirmar la reserva." }, 400);
     if (!bookingId || !["confirmada", "rechazada", "pendiente"].includes(status)) return json({ error: "Datos de solicitud inválidos." }, 400);
     const { data: booking, error: bookingError } = await supabase.from("booking_request").select("*").eq("id", bookingId).single();
     if (bookingError || !booking) return json({ error: "Solicitud no encontrada." }, 404);
+    const previousStatus = String(booking.status ?? "");
     const { error: updateError } = await supabase.from("booking_request").update({ status }).eq("id", bookingId);
     if (updateError) throw updateError;
-    if (status === "pendiente") return json({ ok: true, status, emailSent: false });
+    const erpSynced = await syncWithErp(status, previousStatus, booking, totalClp);
+    if (status === "pendiente") return json({ ok: true, status, emailSent: false, erp_synced: erpSynced });
     const confirmed = status === "confirmada";
     let whatsappQueued = false;
     if (confirmed) {
@@ -58,7 +92,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       console.error("Brevo error:", await emailResponse.text());
       return json({ ok: true, status, emailSent: false, email_sent: false, email_error: "Brevo rechazó el envío.", whatsappQueued });
     }
-    return json({ ok: true, status, emailSent: true, email_sent: true, whatsappQueued });
+    return json({ ok: true, status, emailSent: true, email_sent: true, whatsappQueued, erp_synced: erpSynced });
   } catch (error) {
     console.error(error);
     return json({ error: error instanceof Error ? error.message : "Error inesperado." }, 500);

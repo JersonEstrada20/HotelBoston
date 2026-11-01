@@ -52,13 +52,23 @@ export default function Bookings() {
   }, [bookings, filter, query]);
 
   const updateStatus = async (booking, status) => {
+    let amount = null;
+    if (status === "confirmada") {
+      const raw = window.prompt(`Monto pagado por ${booking.name} (CLP):`);
+      if (raw === null) return;
+      amount = Math.round(Number(String(raw).replace(/[^0-9]/g, "")));
+      if (!amount || amount <= 0) {
+        setError("Indica un monto válido en pesos chilenos para confirmar la reserva.");
+        return;
+      }
+    }
     if (status === "rechazada" && !window.confirm(`¿Rechazar la solicitud de ${booking.name}? Se enviará un correo.`)) return;
     setBusyId(booking.id);
     setError("");
     setMessage("");
     try {
       const { data, error: updateError } = await supabase.functions.invoke("manageBooking", {
-        body: { bookingId: booking.id, status },
+        body: { bookingId: booking.id, status, amount },
       });
       if (updateError) throw updateError;
       if (data?.error) throw new Error(data.error);
