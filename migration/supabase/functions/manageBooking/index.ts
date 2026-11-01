@@ -51,12 +51,18 @@ Deno.serve(async (req: Request): Promise<Response> => {
     if (userError || !user) return json({ error: "No autorizado." }, 401);
     const { data: profile, error: profileError } = await supabase.from("profiles").select("role").eq("id", user.id).single();
     if (profileError || !["admin", "recepcion", "recepcionista"].includes(profile?.role)) return json({ error: "No tienes permiso para gestionar solicitudes." }, 403);
-    const { bookingId, status, amount } = await req.json();
+    const { bookingId, status, amount, resync } = await req.json();
     const totalClp = Math.round(Number(amount) || 0);
     if (status === "confirmada" && totalClp <= 0) return json({ error: "Indica el monto pagado para confirmar la reserva." }, 400);
     if (!bookingId || !["confirmada", "rechazada", "pendiente"].includes(status)) return json({ error: "Datos de solicitud inválidos." }, 400);
     const { data: booking, error: bookingError } = await supabase.from("booking_request").select("*").eq("id", bookingId).single();
     if (bookingError || !booking) return json({ error: "Solicitud no encontrada." }, 404);
+    // Reenvío manual: solo sincroniza con el ERP, sin cambiar estado ni enviar correos.
+    if (resync === true) {
+      if (totalClp <= 0) return json({ error: "Indica el monto pagado para registrar la reserva." }, 400);
+      const synced = await syncWithErp("confirmada", "", booking, totalClp);
+      return json({ ok: true, resync: true, erp_synced: synced });
+    }
     const previousStatus = String(booking.status ?? "");
     const { error: updateError } = await supabase.from("booking_request").update({ status }).eq("id", bookingId);
     if (updateError) throw updateError;

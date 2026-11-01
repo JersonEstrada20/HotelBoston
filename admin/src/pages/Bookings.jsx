@@ -85,6 +85,35 @@ export default function Bookings() {
     }
   };
 
+  // Reenvía al ERP una reserva que ya estaba confirmada antes de la integración.
+  // No cambia el estado ni envía correos.
+  const resyncErp = async (booking) => {
+    const raw = window.prompt(`Monto pagado por ${booking.name} (CLP):`);
+    if (raw === null) return;
+    const amount = Math.round(Number(String(raw).replace(/[^0-9]/g, "")));
+    if (!amount || amount <= 0) {
+      setError("Indica un monto válido en pesos chilenos para registrar la reserva.");
+      return;
+    }
+    setBusyId(booking.id);
+    setError("");
+    setMessage("");
+    try {
+      const { data, error: resyncError } = await supabase.functions.invoke("manageBooking", {
+        body: { bookingId: booking.id, status: "confirmada", amount, resync: true },
+      });
+      if (resyncError) throw resyncError;
+      if (data?.error) throw new Error(data.error);
+      if (data?.erp_synced === false) setMessage("La reserva no se pudo registrar en el ERP. Revisa la conexión e inténtalo de nuevo.");
+      else if (data?.erp_synced === null) setMessage("La integración con el ERP no está configurada en este panel.");
+      else setMessage("Reserva registrada en el ERP con su monto.");
+    } catch (resyncError) {
+      setError(await functionErrorMessage(resyncError));
+    } finally {
+      setBusyId("");
+    }
+  };
+
   const notifyTeam = async (booking) => {
     setBusyId(booking.id);
     setError("");
@@ -158,6 +187,11 @@ export default function Bookings() {
                     <X size={16} /> Rechazar
                   </button>
                 )}
+                {booking.status === "confirmada" && (
+                  <button type="button" className="button button-quiet" disabled={busyId === booking.id} onClick={() => resyncErp(booking)}>
+                    Enviar al ERP
+                  </button>
+                )}
               </div>
             </article>
           ))}
@@ -182,6 +216,7 @@ export default function Bookings() {
           <div className="modal-actions">
             {selected.status !== "confirmada" && <button className="button button-primary" type="button" onClick={() => updateStatus(selected, "confirmada")}><Check size={16} /> Confirmar</button>}
             {selected.status !== "rechazada" && <button className="button button-danger" type="button" onClick={() => updateStatus(selected, "rechazada")}><X size={16} /> Rechazar</button>}
+            {selected.status === "confirmada" && <button className="button button-quiet" type="button" disabled={busyId === selected.id} onClick={() => resyncErp(selected)}>Enviar al ERP</button>}
             {selected.status === "pendiente" && !selected.notification_sent_at && <button className="button button-quiet" type="button" onClick={() => notifyTeam(selected)}>Avisar al equipo</button>}
           </div>
         </Modal>
